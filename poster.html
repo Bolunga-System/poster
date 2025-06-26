@@ -540,8 +540,24 @@
 
             <div class="countdown-container">
                 <div class="countdown-card">
-                    <div class="countdown-number" id="countdown">5</div>
-                    <div class="countdown-label">Days Remaining</div>
+                    <div id="countdown" style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                    <div class="countdown-unit">
+                        <div class="countdown-number" id="days">00</div>
+                        <div class="countdown-label">Days</div>
+                    </div>
+                    <div class="countdown-unit">
+                        <div class="countdown-number" id="hours">00</div>
+                        <div class="countdown-label">Hours</div>
+                    </div>
+                    <div class="countdown-unit">
+                        <div class="countdown-number" id="minutes">00</div>
+                        <div class="countdown-label">Minutes</div>
+                    </div>
+                    <div class="countdown-unit">
+                        <div class="countdown-number" id="seconds">00</div>
+                        <div class="countdown-label">Seconds</div>
+                    </div>
+                    </div>
                 </div>
             </div>
 
@@ -620,57 +636,39 @@ grow, and manage your business</div>
             </div>
         </div>
     </div>
+<script>
+  function updateCountdown() {
+    const firstDate = new Date('2025-07-01T09:00:00');
+    const secondDate = new Date('2025-07-15T09:00:00');
+    const now = new Date();
 
-    <script>
-        function updateCountdown() {
-            const firstDate = new Date('2025-07-01T09:00:00');
-            const secondDate = new Date('2025-07-15T09:00:00');
-            const now = new Date();
-            
-            let targetDate;
-            
-            if (now < firstDate) {
-                targetDate = firstDate;
-            } else if (now < secondDate) {
-                targetDate = secondDate;
-            } else {
-                document.getElementById('countdown').textContent = '0';
-                document.querySelector('.countdown-label').textContent = 'Event Complete';
-                return;
-            }
-            
-            const timeDiff = targetDate - now;
-            
-            if (timeDiff > 0) {
-                const days = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-                document.getElementById('countdown').textContent = days;
-            }
-        }
+    let targetDate;
 
-        updateCountdown();
-        setInterval(updateCountdown, 3600000);
+    if (now < firstDate) {
+      targetDate = firstDate;
+    } else if (now < secondDate) {
+      targetDate = secondDate;
+    } else {
+      document.getElementById('countdown').innerHTML = '<div class="countdown-number">00</div><div class="countdown-label">Event Ended</div>';
+      return;
+    }
 
-        // Add subtle scroll animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
+    const diff = targetDate - now;
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
 
-        document.querySelectorAll('.date-card, .feature-item, .contact-card').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(20px)';
-            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(el);
-        });
-    </script>
+    document.getElementById('days').textContent = String(days).padStart(2, '0');
+    document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+    document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+    document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+</script>
+
 </body>
 </html>
